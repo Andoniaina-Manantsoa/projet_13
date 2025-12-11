@@ -1,127 +1,68 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../store';
-
-interface UserProfile {
-    email: string;
-    firstName: string;
-    lastName: string;
-    createdAt: string;
-    updatedAt: string;
-    id: string;
-}
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { fetchUserProfile } from "./../../services/auth";
+import { apiService } from "./../../services/api";
 
 interface UserState {
-    profile: UserProfile | null;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
     loading: boolean;
-    error: string | null;
 }
 
 const initialState: UserState = {
-    profile: null,
+    firstName: null,
+    lastName: null,
+    email: null,
     loading: false,
-    error: null,
 };
 
-// Récupérer le profil utilisateur
-export const fetchUserProfile = createAsyncThunk(
-    'user/fetchProfile',
-    async (_, { getState, rejectWithValue }) => {
+export const loadUser = createAsyncThunk(
+    "user/load",
+    async (token: string, thunkAPI) => {
         try {
-            const state = getState() as RootState;
-            const token = state.auth.token;
-
-            const response = await fetch('http://localhost:3001/api/v1/user/profile', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                return rejectWithValue(data.message || 'Failed to fetch profile');
-            }
-
-            return data.body;
-        } catch (error) {
-            return rejectWithValue('Network error');
+            const data = await fetchUserProfile(token);
+            return data;
+        } catch {
+            return thunkAPI.rejectWithValue(null);
         }
     }
 );
 
-// Mettre à jour le profil utilisateur
-export const updateUserProfile = createAsyncThunk(
-    'user/updateProfile',
+export const updateUser = createAsyncThunk(
+    "user/update",
     async (
-        updates: { firstName: string; lastName: string },
-        { getState, rejectWithValue }
+        { token, firstName, lastName }: { token: string; firstName: string; lastName: string },
+        thunkAPI
     ) => {
         try {
-            const state = getState() as RootState;
-            const token = state.auth.token;
-
-            const response = await fetch('http://localhost:3001/api/v1/user/profile', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(updates),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                return rejectWithValue(data.message || 'Failed to update profile');
-            }
-
-            return data.body;
-        } catch (error) {
-            return rejectWithValue('Network error');
+            await apiService.updateUserProfile(token, firstName, lastName);
+            return { firstName, lastName };
+        } catch {
+            return thunkAPI.rejectWithValue(null);
         }
     }
 );
 
 const userSlice = createSlice({
-    name: 'user',
+    name: "user",
     initialState,
-    reducers: {
-        clearUserProfile: (state) => {
-            state.profile = null;
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
-            // Fetch profile
-            .addCase(fetchUserProfile.pending, (state) => {
+            .addCase(loadUser.pending, (state) => {
                 state.loading = true;
-                state.error = null;
             })
-            .addCase(fetchUserProfile.fulfilled, (state, action) => {
+            .addCase(loadUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.profile = action.payload;
+                state.firstName = action.payload.firstName;
+                state.lastName = action.payload.lastName;
+                state.email = action.payload.email;
             })
-            .addCase(fetchUserProfile.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload as string;
-            })
-            // Update profile
-            .addCase(updateUserProfile.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(updateUserProfile.fulfilled, (state, action) => {
-                state.loading = false;
-                state.profile = action.payload;
-            })
-            .addCase(updateUserProfile.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload as string;
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.firstName = action.payload.firstName;
+                state.lastName = action.payload.lastName;
             });
     },
 });
 
-export const { clearUserProfile } = userSlice.actions;
 export default userSlice.reducer;

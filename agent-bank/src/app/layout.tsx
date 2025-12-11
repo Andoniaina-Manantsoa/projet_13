@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "../../styles/globals.css";
+import ReduxProvider from "../components/ReduxProvider";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export const metadata: Metadata = {
     title: "Argent Bank",
@@ -20,7 +22,9 @@ export default function RootLayout({
                 />
             </head>
             <body className="flex flex-col min-h-screen m-0 text-center text-text">
-                {children}
+                <ReduxProvider>
+                    {children}
+                </ReduxProvider>
             </body>
         </html>
     );

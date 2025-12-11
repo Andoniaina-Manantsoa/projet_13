@@ -72,7 +72,7 @@ class ApiService {
     }
 
     // Transactions (Phase 2 - préparation)
-    async getTransactions(token: string, month?: string, accountId?: string) {
+   /* async getTransactions(token: string, month?: string, accountId?: string) {
         let endpoint = '/transactions';
         const params = new URLSearchParams();
 
@@ -137,7 +137,7 @@ class ApiService {
             },
             body: { notes },
         });
-    }
+    }*/
 }
 
 export const apiService = new ApiService(API_BASE_URL);
