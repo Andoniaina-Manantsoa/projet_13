@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchUserProfile } from "./../../services/auth";
-import { apiService } from "./../../services/api";
+import { fetchUserProfile } from "../../services/auth";
+import { apiService } from "../../services/api";
 
 interface UserState {
     firstName: string | null;

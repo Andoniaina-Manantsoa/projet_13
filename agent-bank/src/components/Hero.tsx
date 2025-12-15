@@ -7,15 +7,19 @@ export default function Hero() {
                 backgroundPosition: "0 -190px",
             }}
         >
-            <section className="relative bg-white p-8 text-left mx-auto lg:absolute lg:top-[50px] lg:right-[50px] lg:w-[350px] lg:m-8 text-[#2c3e50]">
+            <section className="absolute top-1/2 right-4 bg-white p-8 text-left mx-auto lg:absolute lg:top-[50px] lg:right-[50px] lg:w-[350px] lg:m-8 text-[#2c3e50]">
                 <h2 className="sr-only">Promoted Content</h2>
-                <p className="font-bold m-0 lg:text-[1.5rem]">No fees.</p>
-                <p className="font-bold mt-[-6] lg:text-[1.5rem]">
+
+                <p className="font-bold text-2xl leading-tight">
+                    No fees.
+                </p>
+                <p className="font-bold text-2xl leading-tight">
                     No minimum deposit.
                 </p>
-                <p className="font-bold mt-[-6] lg:text-[1.5rem]">
+                <p className="font-bold text-2xl leading-tight">
                     High interest rates.
                 </p>
+
                 <p className="mb-0 mt-4 text-[0.9rem] lg:text-[1.2rem]">
                     Open a savings account with Argent Bank today!
                 </p>

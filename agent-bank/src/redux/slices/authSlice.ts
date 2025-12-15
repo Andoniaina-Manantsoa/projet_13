@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { loginRequest } from "./../../services/auth";
+import { loginRequest } from "../../services/auth";
 
 interface AuthState {
     token: string | null;

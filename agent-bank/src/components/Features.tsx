@@ -23,24 +23,32 @@ const features = [
 
 export default function Features() {
     return (
-        <section className="flex flex-col lg:flex-row">
+        <section className="flex flex-col lg:flex-row text-center">
             <h2 className="sr-only">Features</h2>
+
             {features.map((feature, index) => (
-                <div key={index} className="flex-1 p-10">
-                    <div className="flex justify-center w-[100px] mx-auto mb-6">
-                        <Image
-                            src={feature.icon}
-                            alt={`${feature.title} Icon`}
-                            width={100}
-                            height={100}
-                            className="border-10 border-b-emerald-600 rounded-full p-4 mb-5 "
-                        />
+                <div
+                    key={index}
+                    className="flex-1 px-10 py-10"
+                >
+                    <div className="flex justify-center mb-6">
+                        <div className="w-[150px] h-[150px] rounded-full border-10 border-emerald-500 flex items-center justify-center">
+                            <Image
+                                src={feature.icon}
+                                alt={`${feature.title} Icon`}
+                                width={100}
+                                height={100}
+                            />
+                        </div>
                     </div>
 
-                    <h3 className="text-[#222] text-xl font-bold mb-2">
+                    <h3 className="text-[#222] text-xl font-bold mb-3">
                         {feature.title}
                     </h3>
-                    <p>{feature.description}</p>
+
+                    <p className="text-gray-700 text-m leading-relaxed">
+                        {feature.description}
+                    </p>
                 </div>
             ))}
         </section>

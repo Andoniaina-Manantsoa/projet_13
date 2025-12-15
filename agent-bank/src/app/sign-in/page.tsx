@@ -20,13 +20,15 @@ export default function SignIn() {
     return (
         <>
             <Nav />
-            <main className="flex-1 bg-dark">
-                <section className="box-border bg-white w-[300px] mx-auto mt-12 p-8">
-                    <i className="fa fa-user-circle text-[5rem]"></i>
-                    <h1 className="text-2xl font-bold mt-4 text-[#2c3e50]">Sign In</h1>
+            <main className="flex-1 bg-[#1a0b2e] flex items-center justify-center min-h-[calc(100vh-120px)]">
+                <section className="bg-white w-[300px] p-8 rounded-sm shadow-lg">
+                    <div className="flex justify-center mb-4">
+                        <i className="fa fa-user-circle text-[3rem] text-gray-600"></i>
+                    </div>
+                    <h1 className="text-2xl font-bold text-center mb-6 text-[#2c3e50]">Sign In</h1>
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col text-left mb-4">
-                            <label htmlFor="username" className="font-bold">
+                            <label htmlFor="username" className="font-bold mb-1 text-sm">
                                 Username
                             </label>
                             <input
@@ -34,11 +36,11 @@ export default function SignIn() {
                                 id="username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="p-[5px] text-xl border border-gray-300 rounded"
+                                className="p-2 text-base border border-gray-300 rounded"
                             />
                         </div>
                         <div className="flex flex-col text-left mb-4">
-                            <label htmlFor="password" className="font-bold">
+                            <label htmlFor="password" className="font-bold mb-1 text-sm">
                                 Password
                             </label>
                             <input
@@ -46,23 +48,24 @@ export default function SignIn() {
                                 id="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="p-[5px] text-xl border border-gray-300 rounded"
+                                className="p-2 text-base border border-gray-300 rounded"
                             />
                         </div>
-                        <div className="flex items-center mb-4">
+                        <div className="flex items-center mb-6">
                             <input
                                 type="checkbox"
                                 id="remember-me"
                                 checked={rememberMe}
                                 onChange={(e) => setRememberMe(e.target.checked)}
+                                className="mr-2"
                             />
-                            <label htmlFor="remember-me" className="ml-1">
+                            <label htmlFor="remember-me" className="text-sm">
                                 Remember me
                             </label>
                         </div>
                         <button
                             type="submit"
-                            className="block w-full px-2 py-2 text-lg font-bold mt-4 border border-primary bg-primary text-white cursor-pointer"
+                            className="w-full px-4 py-3 text-base font-bold bg-[#00bc77] hover:bg-[#00a868] text-white cursor-pointer rounded transition-colors"
                         >
                             Sign In
                         </button>
