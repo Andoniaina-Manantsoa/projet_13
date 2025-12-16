@@ -1,12 +1,28 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface NavProps {
     isAuthenticated?: boolean;
     username?: string;
 }
 
-export default function Nav({ isAuthenticated = false, username }: NavProps) {
+export default function Nav({
+    isAuthenticated = false,
+    username,
+}: NavProps) {
+    const router = useRouter();
+
+    const handleLogout = () => {
+        // 🔐 Supprime le token
+        localStorage.removeItem("token");
+
+        // 🔄 Redirige vers la page de login
+        router.push("/sign-in");
+    };
+
     return (
         <nav className="flex justify-between items-center px-5 py-[5px]">
             <Link href="/" className="flex items-center">
@@ -20,6 +36,7 @@ export default function Nav({ isAuthenticated = false, username }: NavProps) {
                 />
                 <h1 className="sr-only">Argent Bank</h1>
             </Link>
+
             <div>
                 {isAuthenticated ? (
                     <>
@@ -29,12 +46,14 @@ export default function Nav({ isAuthenticated = false, username }: NavProps) {
                         >
                             <i className="fa fa-user-circle"></i> {username}
                         </Link>
-                        <Link
-                            href="/"
-                            className="font-bold text-text no-underline mr-2 hover:underline"
+
+                        {/* 🔴 LOGOUT */}
+                        <button
+                            onClick={handleLogout}
+                            className="font-bold text-text no-underline mr-2 hover:underline bg-transparent border-none cursor-pointer"
                         >
                             <i className="fa fa-sign-out"></i> Sign Out
-                        </Link>
+                        </button>
                     </>
                 ) : (
                     <Link

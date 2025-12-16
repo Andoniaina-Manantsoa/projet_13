@@ -4,43 +4,80 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
+import { loginRequest } from "../../services/auth";
 
 export default function SignIn() {
     const router = useRouter();
-    const [username, setUsername] = useState("");
+
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Logique d'authentification à implémenter
-        router.push("/user");
+        setError(null);
+        setLoading(true);
+
+        try {
+            // 🔐 Appel API login
+            const token = await loginRequest(email, password);
+
+            // 💾 Stockage token
+            localStorage.setItem("token", token);
+
+            // (Optionnel) remember me
+            if (rememberMe) {
+                localStorage.setItem("rememberMe", "true");
+            }
+
+            // 🔄 Redirection profil
+            router.push("/user");
+        } catch (err) {
+            setError("Email ou mot de passe incorrect");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <>
             <Nav />
-            <main className="flex-1 bg-[#1a0b2e] flex items-center justify-center min-h-[calc(100vh-120px)]">
-                <section className="bg-white w-[300px] p-8 rounded-sm shadow-lg">
+
+            <main className="bg-[#1a0b2e] block min-h-[calc(100vh-120px)]">
+                <section className="bg-white w-[300px] m-10 p-8 shadow-lg flex flex-col mx-auto">
                     <div className="flex justify-center mb-4">
                         <i className="fa fa-user-circle text-[3rem] text-gray-600"></i>
                     </div>
-                    <h1 className="text-2xl font-bold text-center mb-6 text-[#2c3e50]">Sign In</h1>
+
+                    <h1 className="text-4xl font-bold text-center mb-6 text-[#2c3e50]">
+                        Sign In
+                    </h1>
+
+                    {error && (
+                        <p className="text-red-600 text-sm text-center mb-4">
+                            {error}
+                        </p>
+                    )}
+
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col text-left mb-4">
-                            <label htmlFor="username" className="font-bold mb-1 text-sm">
-                                Username
+                            <label htmlFor="email" className="font-bold mb-1 text-[#2c3e50]">
+                                Email
                             </label>
                             <input
-                                type="text"
-                                id="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="p-2 text-base border border-gray-300 rounded"
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="p-2 border border-gray-500"
                             />
                         </div>
+
                         <div className="flex flex-col text-left mb-4">
-                            <label htmlFor="password" className="font-bold mb-1 text-sm">
+                            <label htmlFor="password" className="font-bold mb-1 text-[#2c3e50]">
                                 Password
                             </label>
                             <input
@@ -48,9 +85,11 @@ export default function SignIn() {
                                 id="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="p-2 text-base border border-gray-300 rounded"
+                                required
+                                className="p-2 border border-gray-500"
                             />
                         </div>
+
                         <div className="flex items-center mb-6">
                             <input
                                 type="checkbox"
@@ -63,15 +102,18 @@ export default function SignIn() {
                                 Remember me
                             </label>
                         </div>
+
                         <button
                             type="submit"
-                            className="w-full px-4 py-3 text-base font-bold bg-[#00bc77] hover:bg-[#00a868] text-white cursor-pointer rounded transition-colors"
+                            disabled={loading}
+                            className="w-full px-4 py-2 font-bold bg-[#00bc77] hover:bg-[#00a868] text-white disabled:opacity-50"
                         >
-                            Sign In
+                            {loading ? "Signing in..." : "Sign In"}
                         </button>
                     </form>
                 </section>
             </main>
+
             <Footer />
         </>
     );
