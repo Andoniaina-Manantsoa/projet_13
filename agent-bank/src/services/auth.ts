@@ -29,8 +29,8 @@ export async function loginRequest(
 export async function fetchUserProfile(
     token: string
 ): Promise<UserProfile> {
-    const profile = await apiService.getUserProfile(token);
-    return profile;
+    const res: any = await apiService.getUserProfile(token);
+    return res.body;
 }
 
 // ✏️ UPDATE PROFIL
