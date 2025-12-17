@@ -123,7 +123,6 @@ export default function User() {
 
                 {accounts.map((account, index) => (
                     <Account
-                        id={account.id}
                         key={index}
                         title={account.title}
                         amount={account.amount}

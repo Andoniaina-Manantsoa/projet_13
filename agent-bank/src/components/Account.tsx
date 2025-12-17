@@ -4,7 +4,6 @@
 import { useRouter } from "next/navigation";
 
 interface AccountProps {
-    id: string;
     title: string;
     amount: string;
     description: string;
