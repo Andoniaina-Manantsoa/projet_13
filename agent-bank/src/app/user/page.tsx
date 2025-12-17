@@ -6,24 +6,7 @@ import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
 import Account from "../../components/Account";
 import { fetchUserProfile, updateUserProfile, UserProfile } from "../../services/auth";
-
-const accounts = [
-    {
-        title: "Argent Bank Checking (x8349)",
-        amount: "$2,082.79",
-        description: "Available Balance",
-    },
-    {
-        title: "Argent Bank Savings (x6712)",
-        amount: "$10,928.42",
-        description: "Available Balance",
-    },
-    {
-        title: "Argent Bank Credit Card (x8349)",
-        amount: "$184.30",
-        description: "Current Balance",
-    },
-];
+import { accounts } from "../../data/mockAccount";
 
 export default function User() {
     const router = useRouter();
@@ -140,6 +123,7 @@ export default function User() {
 
                 {accounts.map((account, index) => (
                     <Account
+                        id={account.id}
                         key={index}
                         title={account.title}
                         amount={account.amount}

@@ -4,6 +4,7 @@
 import { useRouter } from "next/navigation";
 
 interface AccountProps {
+    id: string;
     title: string;
     amount: string;
     description: string;
@@ -14,8 +15,7 @@ export default function Account({ title, amount, description, accountId }: Accou
     const router = useRouter();
 
     const handleViewTransactions = () => {
-        // Vous pouvez passer l'ID du compte dans l'URL si nécessaire
-        router.push(`/transactions${accountId ? `?account=${accountId}` : ''}`);
+        router.push(`/transactions/${accountId}`);
     };
 
     return (
