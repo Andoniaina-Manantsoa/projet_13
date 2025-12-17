@@ -7,14 +7,19 @@ interface AccountProps {
     title: string;
     amount: string;
     description: string;
-    accountId?: string;
+    accountId: string;
 }
 
 export default function Account({ title, amount, description, accountId }: AccountProps) {
     const router = useRouter();
 
     const handleViewTransactions = () => {
-        router.push(`/transactions/${accountId}`);
+        // Extraire juste le numéro du compte (ex: "x8349" -> "8349")
+        const numericId = accountId.replace('x', '');
+        console.log("Navigation vers:", `/transactions/${numericId}`);
+        console.log("accountId original:", accountId);
+        console.log("numericId:", numericId);
+        router.push(`/transactions/${numericId}`);
     };
 
     return (
