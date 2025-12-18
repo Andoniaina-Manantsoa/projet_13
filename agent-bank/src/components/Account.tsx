@@ -3,6 +3,10 @@
 
 import { useRouter } from "next/navigation";
 
+/**
+ * Interface des props du composant Account
+ * Définit les données attendues pour afficher un compte
+ */
 interface AccountProps {
     title: string;
     amount: string;
@@ -10,15 +14,21 @@ interface AccountProps {
     accountId: string;
 }
 
+/**
+ * Composant d’affichage d’un compte bancaire
+ */
 export default function Account({ title, amount, description, accountId }: AccountProps) {
     const router = useRouter();
 
+    /**
+    * Redirige l’utilisateur vers la page des transactions
+    * du compte sélectionné
+    */
     const handleViewTransactions = () => {
         // Extraire juste le numéro du compte (ex: "x8349" -> "8349")
         const numericId = accountId.replace('x', '');
-        console.log("Navigation vers:", `/transactions/${numericId}`);
-        console.log("accountId original:", accountId);
-        console.log("numericId:", numericId);
+
+        // Redirection vers la page transactions du compte
         router.push(`/transactions/${numericId}`);
     };
 

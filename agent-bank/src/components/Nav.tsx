@@ -4,22 +4,31 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+/**
+ * Interface des props du composant Nav
+ */
 interface NavProps {
-    isAuthenticated?: boolean;
-    username?: string;
+    isAuthenticated?: boolean; // Indique si l’utilisateur est connecté
+    username?: string; // Nom de l’utilisateur connecté
 }
 
+/**
+ * Composant de navigation principal
+ */
 export default function Nav({
     isAuthenticated = false,
     username,
 }: NavProps) {
     const router = useRouter();
 
+    /**
+    * Déconnexion de l’utilisateur
+    */
     const handleLogout = () => {
-        // 🔐 Supprime le token
+        // Supprime le token
         localStorage.removeItem("token");
 
-        // 🔄 Redirige vers la page de login
+        // Redirige vers la page de login
         router.push("/sign-in");
     };
 

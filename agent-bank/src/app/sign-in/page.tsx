@@ -6,35 +6,48 @@ import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
 import { loginRequest } from "../../services/auth";
 
+// Fonction qui appelle l’API de connexion (login)
+/**
+ * Page de connexion (Sign In)
+ */
 export default function SignIn() {
+    // Initialisation du router pour rediriger l’utilisateur
     const router = useRouter();
 
+    // États pour stocker les valeurs du formulaire
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+
+    // États pour la gestion UI
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
+    /**
+     *  Gestion soumission formulaire
+     * @param e événement du formulaire
+     */
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-        setLoading(true);
+        e.preventDefault();  // Empêche le rechargement de la page
+        setError(null); // Réinitialise l’erreur
+        setLoading(true); // Active le loader
 
         try {
-            // 🔐 Appel API login
+            // 🔐 Appel de l’API de connexion avec email et mot de passe
             const token = await loginRequest(email, password);
 
             // 💾 Stockage token
             localStorage.setItem("token", token);
 
-            // (Optionnel) remember me
+            // ☑️ Si "Remember me" est coché, on le sauvegarde
             if (rememberMe) {
                 localStorage.setItem("rememberMe", "true");
             }
 
-            // 🔄 Redirection profil
+            // 🔄 Redirection vers la page profil utilisateur
             router.push("/user");
         } catch (err) {
+            // ❌ En cas d’erreur (mauvais identifiants), on affiche un message
             setError("Email ou mot de passe incorrect");
         } finally {
             setLoading(false);

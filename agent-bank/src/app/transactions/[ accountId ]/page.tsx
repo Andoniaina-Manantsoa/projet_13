@@ -7,78 +7,91 @@ import Footer from "../../../components/Footer";
 import { accountsData, Transaction, AccountInfo } from "../../../data/mockTransactions";
 import { fetchUserProfile, UserProfile } from "../../../services/auth";
 
+// Fonction pour récupérer le profil utilisateur à partir du token
+/**
+ * Page des transactions pour un compte spécifique
+ * URL exemple : /user/accounts/[accountId]
+ */
 export default function TransactionsPage() {
+    // Router Next.js pour les redirections
     const router = useRouter();
+
+    // Récupération des paramètres dynamiques (accountId)
     const params = useParams();
 
+    // États utilisateur et compte
     const [user, setUser] = useState<UserProfile | null>(null);
     const [loadingUser, setLoadingUser] = useState(true);
 
     const [accountData, setAccountData] = useState<AccountInfo | null>(null);
     const [loadingAccount, setLoadingAccount] = useState(true);
 
+    // Etats des transactions
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [expandedId, setExpandedId] = useState<string | null>(null);
 
     // -------------------
-    // DEBUG: Vérifier params
+    // Récupération du profil utilisateur
     // -------------------
     useEffect(() => {
-        console.log("Params object:", params);
-    }, [params]);
-
-    // -------------------
-    // Fetch user
-    // -------------------
-    useEffect(() => {
+        // Récupération du token stocké
         const token = localStorage.getItem("token");
 
+        // Si aucun token → redirection vers la page de login
         if (!token) {
             router.push("/sign-in");
             return;
         }
 
+        // Appel API pour récupérer le profil utilisateur
         fetchUserProfile(token)
             .then((data) => {
-                setUser(data);
-                setLoadingUser(false);
+                setUser(data); // Stockage du profil
+                setLoadingUser(false); // Fin du chargement
             })
             .catch(() => {
+                // Token invalide → nettoyage + redirection
                 localStorage.removeItem("token");
                 router.push("/sign-in");
             });
     }, [router]);
 
     // -------------------
-    // Load account
+    // Chargement du compte via accountId
     // -------------------
     useEffect(() => {
-        console.log("Raw params object:", params);
-
-        // Récupérer la première clé, peu importe les espaces
+        // Récupère dynamiquement la clé du paramètre (gestion des espaces)
         const key = Object.keys(params)[0];
+
+        // Nettoyage de la valeur (trim pour éviter les espaces)
         const accountId = (params[key] as string)?.trim();
 
-        console.log("Corrected accountId:", accountId);
-        console.log("Available accounts:", Object.keys(accountsData));
-
+        // Recherche du compte dans les données mock
         const account = accountsData[accountId] ?? null;
+
+        // Mise à jour des états
         setAccountData(account);
         setTransactions(account?.transactions ?? []);
         setLoadingAccount(false);
     }, [params]);
 
     // -------------------
-    // Handlers
+    // Handlers (interactions utilisateur)
     // -------------------
+
+    // Ouvre / ferme les détails d’une transaction
     const toggleExpand = (id: string) => setExpandedId(prev => (prev === id ? null : id));
+
+    // Mise à jour de la catégorie d’une transaction
     const updateCategory = (id: string, newCategory: string) =>
         setTransactions(prev => prev.map(t => t.id === id ? { ...t, category: newCategory } : t));
+
+    // Mise à jour des notes d’une transaction
     const updateNotes = (id: string, newNotes: string) =>
         setTransactions(prev => prev.map(t => t.id === id ? { ...t, notes: newNotes } : t));
 
     // -------------------
-    // Loading
+    // États de chargement
     // -------------------
     if (loadingUser || loadingAccount) {
         return (
@@ -94,6 +107,9 @@ export default function TransactionsPage() {
         );
     }
 
+    // -------------------
+    // Compte introuvable
+    // -------------------
     if (!accountData) {
         return (
             <>
@@ -110,7 +126,7 @@ export default function TransactionsPage() {
     }
 
     // -------------------
-    // Main render
+    // Rendu principal
     // -------------------
     return (
         <>

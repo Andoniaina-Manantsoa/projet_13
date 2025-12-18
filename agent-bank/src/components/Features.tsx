@@ -1,5 +1,10 @@
 import Image from "next/image";
+// Composant Next.js optimisé pour l’affichage des images
+// (lazy loading, optimisation automatique, meilleures performances)
 
+// -------------------
+// Données des fonctionnalités affichées sur la page d’accueil
+// -------------------
 const features = [
     {
         icon: "/img/icon-chat.png",
@@ -21,6 +26,10 @@ const features = [
     },
 ];
 
+/**
+ * Composant Features
+ * Affiche la liste des avantages de la banque
+ */
 export default function Features() {
     return (
         <section className="flex flex-col lg:flex-row text-center">

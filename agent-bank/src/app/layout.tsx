@@ -3,11 +3,15 @@ import "../../styles/globals.css";
 import ReduxProvider from "../components/ReduxProvider";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
+//  Métadonnées de l’application
 export const metadata: Metadata = {
-    title: "Argent Bank",
+    title: "Argent Bank", 
     description: "Your trusted banking partner",
 };
 
+// -------------------
+// Layout racine de l’application
+// -------------------
 export default function RootLayout({
     children,
 }: {
