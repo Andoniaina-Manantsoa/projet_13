@@ -42,7 +42,7 @@ export default function Account({ title, amount, description, accountId }: Accou
             <div className="w-full lg:w-auto lg:flex-none">
                 <button
                     onClick={handleViewTransactions}
-                    className="block w-full lg:w-[200px] px-2 py-2 text-base font-bold mt-4 border bg-purple-600 text-white rounded">
+                    className="block w-full lg:w-[200px] px-3 py-3 text-base font-bold mt-4 border bg-green-600 text-white rounded">
                     View transactions
                 </button>
             </div>

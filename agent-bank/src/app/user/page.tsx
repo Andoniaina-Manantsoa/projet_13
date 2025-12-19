@@ -101,10 +101,10 @@ export default function User() {
         <>
             <Nav isAuthenticated={true} username={user.firstName} />
 
-            <main className="flex-1 bg-gray-200">
+            <main className="flex-1 bg-[#1a0b2e]">
                 <div className="bg-light py-12">
                     <div className="max-w-4xl mx-auto text-center">
-                        <h1 className="text-3xl font-bold text-dark mb-6">
+                        <h1 className="text-4xl font-bold text-white mb-3">
                             Welcome back
                         </h1>
 
@@ -115,25 +115,25 @@ export default function User() {
                                         type="text"
                                         onChange={(e) => setFirstName(e.target.value)}
                                         className="border border-gray-500 px-2 py-2 text-s bg-white"
-                                        placeholder="First Name"
+                                        placeholder="Tony"
                                     />
                                     <input
                                         type="text"
                                         onChange={(e) => setLastName(e.target.value)}
                                         className="border border-gray-500 px-4 py-2 text-s bg-white"
-                                        placeholder="Last Name"
+                                        placeholder="Stark"
                                     />
                                 </div>
                                 <div className="flex gap-4">
                                     <button
                                         onClick={handleSave}
-                                        className="border border-purple-700 bg-white text-purple-700 font-bold px-6 py-2 hover:bg-primary hover:text-white transition"
+                                        className="border border-green-600 bg-white text-green-600 font-bold px-6 py-2 hover:bg-green-600 hover:text-white transition"
                                     >
                                         Save
                                     </button>
                                     <button
                                         onClick={handleCancel}
-                                        className="border border-purple-700 bg-white text-purple-700 font-bold px-6 py-2 hover:bg-primary hover:text-white transition"
+                                        className="border border-green-600 bg-white text-green-600 font-bold px-6 py-2 hover:bg-green-600 hover:text-white transition"
                                     >
                                         Cancel
                                     </button>
@@ -141,12 +141,12 @@ export default function User() {
                             </div>
                         ) : (
                             <>
-                                <p className="text-dark text-2xl mb-4">
+                                <p className="text-white text-4xl mb-8">
                                     {user.firstName} {user.lastName}
                                 </p>
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="border border-primary bg-primary text-white font-bold px-4 py-2 hover:bg-primary-dark transition"
+                                    className=" text-white bg-green-600 font-bold px-4 py-2 hover:bg-primary-dark transition"
                                 >
                                     Edit Name
                                 </button>
