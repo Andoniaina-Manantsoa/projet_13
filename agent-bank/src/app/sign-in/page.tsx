@@ -38,25 +38,25 @@ export default function SignIn() {
         setLoading(true); // Active le loader
 
         try {
-            // 🔐 Appel de l’API de connexion avec email et mot de passe
+            // Appel de l’API de connexion avec email et mot de passe
             const token = await loginRequest(email, password);
 
-            // 💾 Stockage token
+            // Stockage token
             localStorage.setItem("token", token);
 
-            // 🏪 Mise à jour du store Redux
+            // Mise à jour du store Redux
             dispatch(setCredentials(token));
             dispatch(loadUser(token));
 
-            // ☑️ Si "Remember me" est coché, on le sauvegarde
+            // Si "Remember me" est coché, on le sauvegarde
             if (rememberMe) {
                 localStorage.setItem("rememberMe", "true");
             }
 
-            // 🔄 Redirection vers la page profil utilisateur
+            // Redirection vers la page profil utilisateur
             router.push("/user");
         } catch (err) {
-            // ❌ En cas d’erreur (mauvais identifiants), on affiche un message
+            // En cas d’erreur (mauvais identifiants), on affiche un message
             setError("Email ou mot de passe incorrect");
         } finally {
             setLoading(false);

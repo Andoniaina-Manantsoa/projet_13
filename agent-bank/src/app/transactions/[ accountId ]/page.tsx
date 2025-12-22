@@ -121,7 +121,7 @@ export default function TransactionsPage() {
     if (loadingUser || loadingAccount) {
         return (
             <>
-                <Nav isAuthenticated={!!user} username={user?.firstName || ""} />
+                <Nav/>
                 <main className="flex-1 bg-light pb-12">
                     <div className="text-center py-20">
                         <p className="text-dark text-xl">Chargement du compte...</p>
@@ -138,7 +138,7 @@ export default function TransactionsPage() {
     if (!accountData) {
         return (
             <>
-                <Nav isAuthenticated={!!user} username={user?.firstName || ""} />
+                <Nav/>
                 <main className="flex-1 bg-light pb-12 text-center py-20">
                     Compte introuvable
                 </main>
@@ -152,7 +152,7 @@ export default function TransactionsPage() {
     // -------------------
     return (
         <>
-            <Nav isAuthenticated={!!user} username={user!.firstName} />
+            <Nav/>
             <main className="flex-1 bg-gray-300 pb-12">
                 <div className="bg-white border border-gray-300 py-8 text-center mb-8">
                     <h2 className="text-base font-normal text-dark mb-2">{accountData.title}</h2>
