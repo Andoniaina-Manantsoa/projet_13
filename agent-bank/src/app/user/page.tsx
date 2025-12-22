@@ -2,26 +2,32 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
 import Account from "../../components/Account";
-import { fetchUserProfile, updateUserProfile, UserProfile } from "../../services/auth";
 import { accounts } from "../../data/mockAccount";
-
+import { AppDispatch, RootState } from "../../redux/store";
+import { loadUser, updateUser } from "../../redux/slices/userSlice";
 
 /**
  * Page profil utilisateur
  */
 export default function User() {
     const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>();
 
     // -------------------
-    // États utilisateur
+    // États Redux
     // -------------------
-    const [user, setUser] = useState<UserProfile | null>(null); // Profil utilisateur
+    const { firstName: reduxFirstName, lastName: reduxLastName } = useSelector((state: RootState) => state.user);
+
+    // -------------------
+    // États locaux pour l'édition
+    // -------------------
     const [isEditing, setIsEditing] = useState(false); // Mode édition activé ou non
-    const [firstName, setFirstName] = useState(""); // Prénom modifiable
-    const [lastName, setLastName] = useState(""); // Nom modifiable
+    const [editFirstName, setEditFirstName] = useState(""); // Prénom modifiable
+    const [editLastName, setEditLastName] = useState(""); // Nom modifiable
 
     // -------------------
     // Protection de la page (authentification)
@@ -37,24 +43,16 @@ export default function User() {
             return;
         }
 
-        // Appel API pour récupérer le profil utilisateur
-        fetchUserProfile(token)
-            .then((data) => {
+        // Charge les données via Redux si elles ne sont pas déjà là (ou pour rafraîchir)
+        dispatch(loadUser(token));
 
-                // Stockage du profil dans l'état
-                setUser(data);
+    }, [router, dispatch]);
 
-                // Initialisation des champs éditables
-                setFirstName(data.firstName);
-                setLastName(data.lastName);
-            })
-            .catch((err) => {
-                // Token invalide ou autre erreur → redirection login
-                console.error("Error fetching user profile:", err);
-                localStorage.removeItem("token");
-                router.push("/sign-in");
-            });
-    }, [router]);
+    // Initialise les champs d'édition quand les données Redux changent
+    useEffect(() => {
+        if (reduxFirstName) setEditFirstName(reduxFirstName);
+        if (reduxLastName) setEditLastName(reduxLastName);
+    }, [reduxFirstName, reduxLastName]);
 
     // -------------------
     // Sauvegarde des modifications du profil
@@ -64,11 +62,8 @@ export default function User() {
         if (!token) return;
 
         try {
-            // Appel API pour mettre à jour le profil
-            const updatedUser = await updateUserProfile(token, firstName, lastName);
-
-            // Mise à jour du state utilisateur
-            setUser(updatedUser);
+            // Appel Action Redux pour mettre à jour le profil
+            await dispatch(updateUser({ token, firstName: editFirstName, lastName: editLastName })).unwrap();
 
             // Sortie du mode édition
             setIsEditing(false);
@@ -81,25 +76,19 @@ export default function User() {
     // Annulation de l’édition
     // -------------------
     const handleCancel = () => {
-        // Réinitialisation avec les valeurs d’origine
-        if (user) {
-            setFirstName(user.firstName);
-            setLastName(user.lastName);
-        }
+        // Réinitialisation avec les valeurs Redux
+        if (reduxFirstName) setEditFirstName(reduxFirstName);
+        if (reduxLastName) setEditLastName(reduxLastName);
         setIsEditing(false);
     };
-
-    // -------------------
-    // Sécurité : tant que l’utilisateur n’est pas chargé
-    // -------------------
-    if (!user) return null;
 
     // -------------------
     // Rendu principal
     // -------------------
     return (
         <>
-            <Nav isAuthenticated={true} username={user.firstName} />
+            {/* Nav n'a plus besoin de props manuelles */}
+            <Nav />
 
             <main className="flex-1 bg-[#1a0b2e]">
                 <div className="bg-light py-12">
@@ -113,15 +102,15 @@ export default function User() {
                                 <div className="flex gap-4">
                                     <input
                                         type="text"
-                                        value={firstName}
-                                        onChange={(e) => setFirstName(e.target.value)}
+                                        value={editFirstName}
+                                        onChange={(e) => setEditFirstName(e.target.value)}
                                         className="border border-gray-500 px-2 py-2 text-s bg-white"
                                         placeholder="Tony"
                                     />
                                     <input
                                         type="text"
-                                        value={lastName}
-                                        onChange={(e) => setLastName(e.target.value)}
+                                        value={editLastName}
+                                        onChange={(e) => setEditLastName(e.target.value)}
                                         className="border border-gray-500 px-4 py-2 text-s bg-white"
                                         placeholder="Stark"
                                     />
@@ -143,15 +132,15 @@ export default function User() {
                             </div>
                         ) : (
                             <>
-                                    <p className="text-white text-4xl mb-8">
-                                        {firstName} {lastName}
-                                    </p>
-                                    <button
-                                        onClick={() => setIsEditing(true)}
-                                        className=" text-white bg-green-600 font-bold px-4 py-2 hover:bg-primary-dark transition"
-                                    >
-                                        Edit Name
-                                    </button>
+                                <p className="text-white text-4xl mb-8">
+                                    {reduxFirstName} {reduxLastName}
+                                </p>
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className=" text-white bg-green-600 font-bold px-4 py-2 hover:bg-primary-dark transition"
+                                >
+                                    Edit Name
+                                </button>
                             </>
                         )}
                     </div>
