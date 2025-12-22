@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
 import { loginRequest } from "../../services/auth";
+import { AppDispatch } from "../../redux/store";
+import { setCredentials } from "../../redux/slices/authSlice";
+import { loadUser } from "../../redux/slices/userSlice";
 
 // Fonction qui appelle l’API de connexion (login)
 /**
@@ -13,6 +17,7 @@ import { loginRequest } from "../../services/auth";
 export default function SignIn() {
     // Initialisation du router pour rediriger l’utilisateur
     const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>();
 
     // États pour stocker les valeurs du formulaire
     const [email, setEmail] = useState("");
@@ -38,6 +43,10 @@ export default function SignIn() {
 
             // 💾 Stockage token
             localStorage.setItem("token", token);
+
+            // 🏪 Mise à jour du store Redux
+            dispatch(setCredentials(token));
+            dispatch(loadUser(token));
 
             // ☑️ Si "Remember me" est coché, on le sauvegarde
             if (rememberMe) {

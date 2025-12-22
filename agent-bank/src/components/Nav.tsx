@@ -3,30 +3,27 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-/**
- * Interface des props du composant Nav
- */
-interface NavProps {
-    isAuthenticated?: boolean; // Indique si l’utilisateur est connecté
-    username?: string; // Nom de l’utilisateur connecté
-}
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../redux/store";
+import { logout } from "../redux/slices/authSlice";
 
 /**
  * Composant de navigation principal
  */
-export default function Nav({
-    isAuthenticated = false,
-    username,
-}: NavProps) {
+export default function Nav() {
     const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>();
+
+    // Récupération de l'état global via Redux
+    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+    const { firstName } = useSelector((state: RootState) => state.user);
 
     /**
     * Déconnexion de l’utilisateur
     */
     const handleLogout = () => {
-        // Supprime le token
-        localStorage.removeItem("token");
+        // Dispatch l'action de logout Redux
+        dispatch(logout());
 
         // Redirige vers la page de login
         router.push("/sign-in");
@@ -53,7 +50,7 @@ export default function Nav({
                             href="/user"
                             className="font-bold text-text no-underline mr-2 hover:underline"
                         >
-                            <i className="fa fa-user-circle"></i> {username}
+                            <i className="fa fa-user-circle"></i> {firstName}
                         </Link>
 
                         {/* 🔴 LOGOUT */}
