@@ -45,7 +45,19 @@ export async function updateUserProfile(
     token: string,
     firstName: string,
     lastName: string
-): Promise<UserProfile> {
-    // Appel à la méthode updateUserProfile de ApiService
-    return apiService.updateUserProfile(token, firstName, lastName);
+) {
+    const response = await fetch("http://localhost:3001/api/v1/user/profile", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ firstName, lastName }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to update profile");
+    }
+
+    return response.json();
 }

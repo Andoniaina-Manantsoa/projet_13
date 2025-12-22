@@ -113,12 +113,14 @@ export default function User() {
                                 <div className="flex gap-4">
                                     <input
                                         type="text"
+                                        value={firstName}
                                         onChange={(e) => setFirstName(e.target.value)}
                                         className="border border-gray-500 px-2 py-2 text-s bg-white"
                                         placeholder="Tony"
                                     />
                                     <input
                                         type="text"
+                                        value={lastName}
                                         onChange={(e) => setLastName(e.target.value)}
                                         className="border border-gray-500 px-4 py-2 text-s bg-white"
                                         placeholder="Stark"
@@ -141,15 +143,15 @@ export default function User() {
                             </div>
                         ) : (
                             <>
-                                <p className="text-white text-4xl mb-8">
-                                    {user.firstName} {user.lastName}
-                                </p>
-                                <button
-                                    onClick={() => setIsEditing(true)}
-                                    className=" text-white bg-green-600 font-bold px-4 py-2 hover:bg-primary-dark transition"
-                                >
-                                    Edit Name
-                                </button>
+                                    <p className="text-white text-4xl mb-8">
+                                        {firstName} {lastName}
+                                    </p>
+                                    <button
+                                        onClick={() => setIsEditing(true)}
+                                        className=" text-white bg-green-600 font-bold px-4 py-2 hover:bg-primary-dark transition"
+                                    >
+                                        Edit Name
+                                    </button>
                             </>
                         )}
                     </div>
