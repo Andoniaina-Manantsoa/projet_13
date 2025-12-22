@@ -7,6 +7,27 @@ import Footer from "../../../components/Footer";
 import { accountsData, Transaction, AccountInfo } from "../../../data/mockTransactions";
 import { fetchUserProfile, UserProfile } from "../../../services/auth";
 
+
+/* ======================
+    Icône SVG Pencil
+====================== */
+const PencilIcon = ({ className = "" }: { className?: string }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className={`w-6 h-6 ${className}`}
+        fill="none"
+        viewBox="0 0 25 25"
+        stroke="currentColor"
+        strokeWidth={2}
+    >
+        <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.232 5.232l3.536 3.536M9 11l6.232-6.232a2.5 2.5 0 013.536 3.536L12.536 14.536a2.5 2.5 0 01-1.768.732H9v-1.768a2.5 2.5 0 01.732-1.768z"
+        />
+    </svg>
+);
+
 // Fonction pour récupérer le profil utilisateur à partir du token
 /**
  * Page des transactions pour un compte spécifique
@@ -29,6 +50,10 @@ export default function TransactionsPage() {
     // Etats des transactions
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [expandedId, setExpandedId] = useState<string | null>(null);
+
+    // États d’édition
+    const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
+    const [editingNotesId, setEditingNotesId] = useState<string | null>(null);
 
     // -------------------
     // Récupération du profil utilisateur
@@ -114,11 +139,8 @@ export default function TransactionsPage() {
         return (
             <>
                 <Nav isAuthenticated={!!user} username={user?.firstName || ""} />
-                <main className="flex-1 bg-light pb-12">
-                    <div className="text-center py-20">
-                        <p className="text-dark text-xl">Compte introuvable</p>
-                        <p className="text-red-500 mt-2">Vérifiez l'URL ou accountId</p>
-                    </div>
+                <main className="flex-1 bg-light pb-12 text-center py-20">
+                    Compte introuvable
                 </main>
                 <Footer />
             </>
@@ -162,25 +184,77 @@ export default function TransactionsPage() {
                             </div>
 
                             {expandedId === t.id && (
-                                <div className="px-6 py-6 bg-gray-50">
-                                    <div className="space-y-4">
-                                        <div className="flex gap-4"><strong>Transaction Type:</strong> {t.type}</div>
-                                        <div className="flex gap-2 items-center">
-                                            <strong>Category:</strong>
-                                            <select value={t.category} onChange={e => updateCategory(t.id, e.target.value)} className="px-2 py-1 bg-white">
-                                                <option value="Food">Food</option>
-                                                <option value="Transport">Transport</option>
-                                                <option value="Shopping">Shopping</option>
-                                                <option value="Entertainment">Entertainment</option>
-                                                <option value="Other">Other</option>
-                                                <option value="Income">Income</option>
-                                                <option value="Transfer">Transfer</option>
+                                <div className="px-6 py-6 bg-gray-50 space-y-4">
+                                    <div className="flex gap-4">
+                                        <span>Transaction Type:</span>
+                                        {t.type}
+                                    </div>
+
+                                    {/* Category */}
+                                    <div className="flex gap-2 items-center">
+                                        <span>Category:</span>
+
+                                        {editingCategoryId === t.id ? (
+                                            <select
+                                                value={t.category}
+                                                onChange={(e) =>
+                                                    updateCategory(t.id, e.target.value)
+                                                }
+                                                onBlur={() => setEditingCategoryId(null)}
+                                                autoFocus
+                                                className="border px-2 py-1"
+                                            >
+                                                <option>Food</option>
+                                                <option>Transport</option>
+                                                <option>Shopping</option>
+                                                <option>Entertainment</option>
+                                                <option>Other</option>
+                                                <option>Income</option>
+                                                <option>Transfer</option>
                                             </select>
-                                        </div>
-                                        <div className="flex gap-2 items-center">
-                                            <strong>Notes:</strong>
-                                            <input value={t.notes} onChange={e => updateNotes(t.id, e.target.value)} placeholder="votre note ici..." className="px-2 py-1 bg-white" />
-                                        </div>
+                                        ) : (
+                                            <>
+                                                <span>{t.category}</span>
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setEditingCategoryId(t.id);
+                                                    }}
+                                                    className="text-gray-400 hover:text-emerald-600"
+                                                >
+                                                    <PencilIcon />
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {/* Notes */}
+                                    <div className="flex gap-2 items-center">
+                                        <span>Notes:</span>
+
+                                        {editingNotesId === t.id ? (
+                                            <input
+                                                value={t.notes}
+                                                onChange={(e) =>
+                                                    updateNotes(t.id, e.target.value)
+                                                }
+                                                onBlur={() => setEditingNotesId(null)}
+                                                autoFocus
+                                                className="border px-2 py-1"
+                                            />
+                                        ) : (
+                                            <>
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setEditingNotesId(t.id);
+                                                    }}
+                                                    className="text-gray-400 hover:text-emerald-600"
+                                                >
+                                                    <PencilIcon />
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             )}
